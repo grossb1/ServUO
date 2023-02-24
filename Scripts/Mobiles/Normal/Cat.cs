@@ -1,3 +1,5 @@
+using Server.Items;
+
 namespace Server.Mobiles
 {
     [CorpseName("a cat corpse")]
@@ -46,7 +48,64 @@ namespace Server.Mobiles
         public override int Meat => 1;
         public override FoodType FavoriteFood => FoodType.Meat | FoodType.Fish;
         public override PackInstinct PackInstinct => PackInstinct.Feline;
-        public override void Serialize(GenericWriter writer)
+
+
+
+
+		public override void OnActionWander()
+		{
+			var defaultSpeed = PassiveSpeed;
+			base.OnActionWander();
+			var mobilesInRange = base.GetMobilesInRange(10);
+			Mobile mobileToFollow = null;
+			foreach( var mobile in mobilesInRange )
+			{
+				if (mobile is PlayerMobile)
+				{
+					var backpack = mobile.Backpack;
+					if(backpack.FindItemByType<SackOfCatnip>() != null)
+					{
+						mobileToFollow = mobile;
+						break;
+					}
+				}
+			}
+
+			mobilesInRange.Free();
+
+			if (mobileToFollow == null)
+			{
+				// base.SummonMaster = null;
+				CurrentSpeed = PassiveSpeed;
+				TargetLocation = null;
+				foreach (var item in base.GetItemsInRange(10))
+				{
+					if(item is SackOfCatnip)
+					{
+						TargetLocation = item.Location;
+						break;
+					}
+				}
+			}
+			else
+			{
+				TargetLocation = mobileToFollow.Location;
+				// base.SummonMaster = mobileToFollow;
+				CurrentSpeed = PassiveSpeed * 3;
+				// base.FollowRange = 2;
+			}
+
+		
+
+
+		}
+
+		public override void OnThink()
+		{
+			base.OnThink();
+
+		}
+		public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
             writer.Write(0);

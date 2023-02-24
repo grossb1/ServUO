@@ -700,7 +700,7 @@ namespace Server.Mobiles
                         {
                             // This is a new spawn object so add it to the array (deep copy)
                             m_SpawnObjects.Add(new SpawnObject(so.TypeName, so.ActualMaxCount, so.SubGroup, so.SequentialResetTime, so.SequentialResetTo, so.KillsNeeded,
-                                so.RestrictKillsToSubgroup, so.ClearOnAdvance, so.MinDelay, so.MaxDelay, so.SpawnsPerTick, so.PackRange));
+                                so.RestrictKillsToSubgroup, so.ClearOnAdvance, so.MinDelay, so.MaxDelay, so.SpawnsPerTick, so.PackRange, so.ChanceToSpawn));
                         }
                     }
 
@@ -8374,11 +8374,12 @@ namespace Server.Mobiles
 
                 int CurrentCreatureMax = TheSpawn.MaxCount;
                 int CurrentCreatureCount = TheSpawn.SpawnedObjects.Count;
+				double ChanceToSpawn = TheSpawn.ChanceToSpawn;
 
                 // Check that the current object to be spawned has not reached its maximum allowed
                 // and make sure that the maximum spawner count has not been exceeded as well
                 if ((CurrentCreatureCount >= CurrentCreatureMax) ||
-                    (TotalSpawnedObjects >= m_Count))
+                    (TotalSpawnedObjects >= m_Count) || Utility.RandomMinMax(0.0, 100.0) > ChanceToSpawn)
                 {
                     return false;
                 }
@@ -11620,6 +11621,7 @@ namespace Server.Mobiles
             public bool Disabled { get; set; } = false;
             public bool Ignore { get; set; } = false;
             public int PackRange { get; set; } = -1;
+			public double ChanceToSpawn { get; set; } = 100.0;
 
             // command loggable constructor
             public SpawnObject(Mobile from, XmlSpawner spawner, string name, int maxamount)
@@ -11673,7 +11675,7 @@ namespace Server.Mobiles
             }
 
             public SpawnObject(string name, int maxamount, int subgroup, double sequentialresettime, int sequentialresetto, int killsneeded,
-                bool restrictkills, bool clearadvance, double mindelay, double maxdelay, int spawnsper, int packrange)
+                bool restrictkills, bool clearadvance, double mindelay, double maxdelay, int spawnsper, int packrange, double chanceToSpawn)
             {
                 TypeName = name;
                 MaxCount = maxamount;
@@ -11687,6 +11689,7 @@ namespace Server.Mobiles
                 MaxDelay = maxdelay;
                 SpawnsPerTick = spawnsper;
                 PackRange = packrange;
+				ChanceToSpawn = chanceToSpawn;
                 SpawnedObjects = new List<object>();
             }
 
@@ -11861,9 +11864,15 @@ namespace Server.Mobiles
                                     try { packRange = int.Parse(parmstr); }
                                     catch { }
 
+									// ChanceToSpawn
+									parmstr = GetParm(s, ":CH=");
+									double chanceToSpawn = 100.0;
+									try { chanceToSpawn = double.Parse(parmstr); }
+									catch { }
+
                                     // Create the spawn object and store it in the array list
                                     SpawnObject so = new SpawnObject(SpawnObjectDetails[0], maxCount, subGroup, resetTime, resetTo, killsNeeded,
-                                        restrictKills, clearAdvance, minD, maxD, spawnsPer, packRange);
+                                        restrictKills, clearAdvance, minD, maxD, spawnsPer, packRange, chanceToSpawn);
 
                                     NewSpawnObjects.Add(so);
                                 }

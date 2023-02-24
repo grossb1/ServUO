@@ -45,7 +45,8 @@ namespace Server.Engines.Plants
         HopsSouth,
         SugarCanes,
         CocoaTree,
-        Vanilla
+        Vanilla,
+		Catnip
     }
 
     public enum PlantCategory
@@ -62,6 +63,7 @@ namespace Server.Engines.Plants
 
     public class PlantTypeInfo
     {
+        // private PlantTypeInfo(int itemID, int offsetX, int offsetY, PlantType plantType, bool containsPlant, bool flowery, bool crossable, bool reproduces, PlantCategory plantCategory, int plantLabelSeed, int plantLabelPlant, int plantLabelFullGrown, int plantLabelDecorative, int seedLabel, int seedLabelPlural)
         private static readonly PlantTypeInfo[] m_Table = new PlantTypeInfo[]
         {
             new PlantTypeInfo( 0xC83, 0, 0,         PlantType.CampionFlowers,       false, true, true, true,        PlantCategory.Default ),
@@ -107,7 +109,8 @@ namespace Server.Engines.Plants
             new PlantTypeInfo( 0x1AA1, 10, -25,     PlantType.HopsSouth,            false, false, false, false,     PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x246C, -25, -20,    PlantType.SugarCanes,           false, false, false, true,      PlantCategory.Peculiar,     1114898, 1114898, 1094702, 1094703, 1095221, 1113715 ),
             new PlantTypeInfo( 0xC9E, -40, -30,     PlantType.CocoaTree,            false, false, false, true,      PlantCategory.Fragrant,     1080536, 1080536, 1080534, 1080531, 1080533, 1113716 ),
-            new PlantTypeInfo( 0x4B8C, 5, 10,       PlantType.Vanilla,              false, true, false, true,       PlantCategory.Peculiar )
+            new PlantTypeInfo( 0x4B8C, 5, 10,       PlantType.Vanilla,              false, true, false, true,       PlantCategory.Peculiar ),
+            new PlantTypeInfo( 0xCA5, -8, 0,        PlantType.Catnip,               false, true, false, false,      PlantCategory.Exceptional )
         };
 
         public static PlantTypeInfo GetInfo(PlantType plantType)
