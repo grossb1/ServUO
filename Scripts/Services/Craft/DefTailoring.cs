@@ -344,9 +344,12 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(EveningGown), 1111747, 1109625, 75, 90.0, typeof(Cloth), 1044455, 18, 1044287);
             AddRecipe(index, (int)TailorRecipe.EveningGown);
 
-            #endregion
+			#endregion
 
-            #region Misc
+			#region Misc
+			index = AddCraft(typeof(SackOfCatnip), 1015283, "Sack of Catnip", 90.0, 100.0, typeof(Leather), 1044462, 8);
+			AddRes(index, typeof(Catnip), "Catnip", 8);
+
             AddCraft(typeof(BodySash), 1015283, 1025441, 4.1, 29.1, typeof(Cloth), 1044455, 4, 1044287);
             AddCraft(typeof(HalfApron), 1015283, 1025435, 20.7, 45.7, typeof(Cloth), 1044455, 6, 1044287);
             AddCraft(typeof(FullApron), 1015283, 1025437, 29.0, 54.0, typeof(Cloth), 1044455, 10, 1044287);

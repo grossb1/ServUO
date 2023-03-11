@@ -1,6 +1,9 @@
 using Server.Multis;
 using Server.Prompts;
 using Server.Regions;
+using Server.Mobiles;
+using Server.ContextMenus;
+using System.Collections.Generic;
 
 namespace Server.Items
 {
@@ -32,6 +35,20 @@ namespace Server.Items
         {
             Weight = 1.0;
             Type = RecallRuneType.Normal;
+            CalculateHue();
+        }
+
+        [Constructable]
+        public RecallRune(string description, Map targetMap, BaseHouse house, BaseGalleon galleon, RecallRuneType type, Point3D target) : base(0x1F14)
+        {
+            Weight = 1.0;
+            m_Marked = true;
+            m_Description = description;
+            m_TargetMap = targetMap;
+            m_House = house;
+            m_Galleon = galleon;
+            Type = type;
+            Target = target;
             CalculateHue();
         }
 
@@ -130,6 +147,20 @@ namespace Server.Items
                     InvalidateProperties();
                 }
             }
+        }
+
+        public void CreateCopy(PlayerMobile from)
+        {
+            var copy = new RecallRune(
+              m_Description,
+              m_TargetMap,
+              m_House,
+              m_Galleon,
+              Type,
+              Target
+            );
+
+            from.AddToBackpack(copy);
         }
 
         public override void Serialize(GenericWriter writer)
@@ -249,6 +280,36 @@ namespace Server.Items
             CalculateHue();
             InvalidateProperties();
         }
+
+        public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
+		{
+			base.GetContextMenuEntries(from, list);
+
+			if(from is PlayerMobile player) 
+            { 
+				// var magerySkill.value = from.Skills[25];
+                // if(magerySkill >= 60)
+                list.Add(new Copy(player, this));
+            }
+		}
+
+        public class Copy : ContextMenuEntry
+		{
+			private readonly PlayerMobile m_From;
+			private readonly RecallRune m_RecallRune;
+
+			public Copy(PlayerMobile from, RecallRune recallRune)
+				: base(3005044, 5)
+			{
+				m_From = from;
+				m_RecallRune = recallRune;
+			}
+
+			public override void OnClick()
+			{
+				m_RecallRune.CreateCopy(m_From);
+			}
+		}
 
         public override void GetProperties(ObjectPropertyList list)
         {

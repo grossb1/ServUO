@@ -269,7 +269,7 @@ namespace Server.Engines.Plants
             set { if (value >= 0) m_LeftSeeds = value; }
         }
 
-        public int AvailableResources
+	    public int AvailableResources
         {
             get { return m_AvailableResources; }
             set { if (value >= 0) m_AvailableResources = value; }

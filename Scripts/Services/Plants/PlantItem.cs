@@ -54,7 +54,7 @@ namespace Server.Engines.Plants
             set { m_Level = value; }
         }
 
-        public PlantSystem PlantSystem => m_PlantSystem;
+		public PlantSystem PlantSystem => m_PlantSystem;
 
         public override bool ForceShowProperties => true;
 
@@ -107,7 +107,14 @@ namespace Server.Engines.Plants
             }
         }
 
-        [CommandProperty(AccessLevel.GameMaster)]
+		[CommandProperty(AccessLevel.GameMaster)]
+		public int AvailableResources
+		{
+			get { return m_PlantSystem.AvailableResources; }
+			set { m_PlantSystem.AvailableResources = value; }
+		}
+
+		[CommandProperty(AccessLevel.GameMaster)]
         public PlantType PlantType
         {
             get { return m_PlantType; }
